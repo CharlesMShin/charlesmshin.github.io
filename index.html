@@ -152,6 +152,12 @@
     background:var(--accent);transition:width .5s}
   .card:hover{transform:translateY(-4px);border-color:var(--wire)}
   .card:hover::before{width:100%}
+  /* legacy(과거 선도 사례) 카드 — 앰버 톤 */
+  .card.legacy::before{background:var(--amber)}
+  .card.legacy .tag{color:var(--amber)}
+  .card.legacy .story .k{color:var(--amber)}
+  .card.legacy .diagram .box.hl{border-color:var(--amber);color:var(--amber)}
+  .card.legacy .diagram .arrow{color:#8a6a2a}
   .card .tag{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase}
   .card h4{font-size:18.5px;font-weight:600;margin:10px 0 14px;letter-spacing:-.01em}
   .card .story{margin-bottom:16px}
@@ -374,6 +380,46 @@
           </div>
         </div>
         <div class="foot"><span>Nexacro</span><span>eGovFrame</span><span>Java</span></div>
+      </div>
+
+      <div class="card legacy reveal">
+        <span class="tag">선도 사례 · 2018</span>
+        <h4>상품권 + 신용카드 복합결제</h4>
+        <div class="story">
+          <div class="row"><span class="k">문제</span><span class="v">상품권 잔액이 결제액에 못 미칠 때, 부족분을 다른 수단으로 자연스럽게 이어 결제해야 함.</span></div>
+          <div class="row"><span class="k">접근</span><span class="v">상품권으로 우선 차감하고 남은 금액을 신용카드로 승인하는 혼합결제 흐름을, 국내 사례가 드물던 시기에 선도적으로 설계.</span></div>
+          <div class="row"><span class="k">결과</span><span class="v">산림복지 상품권 온라인 구매·결제 시스템에 복합결제 프로세스를 적용.</span></div>
+        </div>
+        <div class="diagram">
+          <div class="flow">
+            <span class="box">결제액</span>
+            <span class="arrow">→</span>
+            <span class="box hl">상품권 차감</span>
+            <span class="arrow">→</span>
+            <span class="box">잔액 카드승인</span>
+          </div>
+        </div>
+        <div class="foot"><span>eGovFrame</span><span>Java</span><span>PG 연동</span></div>
+      </div>
+
+      <div class="card legacy reveal">
+        <span class="tag">선도 사례 · 2016</span>
+        <h4>보이는 ARS</h4>
+        <div class="story">
+          <div class="row"><span class="k">문제</span><span class="v">음성만으로 안내하던 ARS의 한계 — 복잡한 메뉴를 귀로만 따라가기 어려움.</span></div>
+          <div class="row"><span class="k">접근</span><span class="v">통화 중 화면으로 메뉴를 보며 조작하는 '보이는 ARS'를 국내 카드사 최초로 개발. 대외망 인터페이스까지 직접 구현.</span></div>
+          <div class="row"><span class="k">결과</span><span class="v">기존 음성 ARS를 WEB 형태로 고도화해 이용 편의성을 개선.</span></div>
+        </div>
+        <div class="diagram">
+          <div class="flow">
+            <span class="box">통화</span>
+            <span class="arrow">→</span>
+            <span class="box hl">화면 메뉴 (Visual)</span>
+            <span class="arrow">→</span>
+            <span class="box">대외망 연동</span>
+          </div>
+        </div>
+        <div class="foot"><span>IVR</span><span>Java</span><span>Avaya Platform</span></div>
       </div>
 
     </div>
