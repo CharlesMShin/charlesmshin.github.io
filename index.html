@@ -114,8 +114,9 @@
 
   /* ---- TIMELINE ---- */
   .timeline{position:relative;margin-left:8px}
-  .timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:40px;width:2px;
-    background:linear-gradient(var(--accent),var(--accent-dim),var(--amber))}
+  .timeline::before{content:"";position:absolute;left:6.5px;top:6px;bottom:40px;width:3px;border-radius:2px;
+    background:linear-gradient(var(--accent) 0%,var(--accent) 22%,var(--accent-dim) 55%,#c88a2e 82%,var(--amber) 100%);
+    box-shadow:0 0 12px rgba(61,220,151,.15)}
   .era{position:relative;padding:0 0 46px 42px}
   .era .node{position:absolute;left:0;top:5px;width:16px;height:16px;border-radius:50%;
     background:var(--bg);border:2px solid var(--wire);transition:.35s}
@@ -292,7 +293,7 @@
       <span class="sec-title">케이스 스터디 — 어떻게 풀었나</span>
       <span class="sec-line"></span>
     </div>
-    <p class="sec-note reveal">// 다룬 시스템 대부분이 폐쇄망·금융 코어라 화면은 공개하지 않습니다. </p>
+    <p class="sec-note reveal">// 다룬 시스템 대부분이 폐쇄망·금융 코어라 화면은 공개하지 않습니다. 대신 문제를 어떻게 설계로 풀었는지를 보여드립니다.</p>
     <div class="cards">
 
       <div class="card reveal">
