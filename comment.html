@@ -35,6 +35,39 @@ iframe{width:100%;height:100%;border:none;background:#fff;display:block}
 .drop .big{font-size:17px;font-weight:800;letter-spacing:-.02em}
 .drop p{margin:0;color:#42536a;max-width:420px;line-height:1.6}
 .drop.over{background:#e7f0f7;outline:3px dashed #0f5c8c;outline-offset:-16px}
+.mask{position:fixed;inset:0;background:rgba(15,25,38,.28);display:none;z-index:120}
+.mask.on{display:block}
+.dlg{position:absolute;background:#fff;border-radius:5px;width:440px;max-width:calc(100vw - 24px);
+ box-shadow:0 18px 48px rgba(10,20,35,.4);display:flex;flex-direction:column;
+ border:1px solid #b9c5d3}
+.dlg::before{content:"";position:absolute;left:-6px;top:-6px;width:12px;height:12px;
+ border-radius:50%;background:#0f5c8c;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.dlg.flipx::before{left:auto;right:-6px}
+.dlg.flipy::before{top:auto;bottom:-6px}
+.dlg header{padding:12px 16px 10px;border-bottom:1px solid #e4e9f0;display:flex;
+ align-items:center;gap:9px;cursor:grab;user-select:none}
+.dlg header:active{cursor:grabbing}
+.dlg.moving{box-shadow:0 26px 60px rgba(10,20,35,.45)}
+.dlg.moving::before{display:none}
+.grip{color:#b3bfcd;font-size:13px;letter-spacing:-2px;margin-right:1px}
+.dlg header h3{margin:0;font-size:14.5px;font-weight:800;letter-spacing:-.02em}
+.dlg header .sp{flex:1}
+.swatch{display:flex;gap:5px}
+.swatch button{width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.18);padding:0}
+.swatch button:hover{transform:scale(1.14)}
+.swatch button.on{outline:2px solid #14212e;outline-offset:1px}
+.dlg .body{padding:14px 16px}
+.dlg textarea{width:100%;border:1px solid #ccd5e0;border-radius:3px;padding:9px 11px;
+ font-family:inherit;font-size:13.5px;line-height:1.65;color:#14212e;resize:vertical;
+ min-height:120px;letter-spacing:-.01em}
+.dlg textarea:focus{outline:2px solid #0f5c8c;outline-offset:-1px;border-color:#0f5c8c}
+.dlg .hint{font-size:11.5px;color:#8494a8;margin-top:7px}
+.dlg .hint kbd{font-family:ui-monospace,Consolas,monospace;font-size:10.5px;background:#eef2f6;
+ border:1px solid #d8e0e8;border-radius:3px;padding:1px 5px}
+.dlg footer{padding:11px 16px;border-top:1px solid #e4e9f0;display:flex;gap:6px;align-items:center}
+.dlg footer .sp{flex:1}
+.dgr{color:#d0342c;border-color:#e5bcb9}
+.dgr:hover:not(:disabled){background:#fdf2f1}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(12px);
  background:#14212e;color:#fff;padding:9px 17px;border-radius:4px;font-size:12.5px;font-weight:600;
  opacity:0;pointer-events:none;transition:.2s;z-index:99}
@@ -59,6 +92,27 @@ iframe{width:100%;height:100%;border:none;background:#fff;display:block}
     <div class="big">HTML 또는 이미지 파일을 여기에 끌어놓으세요</div>
     <p>HTML은 동작하는 그대로, 이미지는 캡처 화면 그대로 뜹니다. 원하는 곳을 클릭하고 하고 싶은 말을 적으면 그 자리에 메모가 붙습니다. 붙은 메모는 끌어서 옮길 수 있습니다.</p>
     <button class="pri" onclick="fi.click()">파일 선택</button>
+  </div>
+</div>
+
+<div class="mask" id="mask" onclick="if(event.target===this)closeDlg()">
+  <div class="dlg">
+    <header id="dHead" onmousedown="startDrag(event)">
+      <span class="grip">⠿</span>
+      <h3 id="dTitle">코멘트</h3>
+      <span class="sp"></span>
+      <div class="swatch" id="sw"></div>
+    </header>
+    <div class="body">
+      <textarea id="dTxt" placeholder="이 위치에 남길 내용을 입력하세요.&#10;여러 줄로 자유롭게 쓰시면 됩니다."></textarea>
+      <div class="hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> 저장 · <kbd>Esc</kbd> 취소 · 제목줄을 끌면 창이 이동합니다</div>
+    </div>
+    <footer>
+      <button class="dgr" id="dDel" onclick="delMemo()">삭제</button>
+      <span class="sp"></span>
+      <button onclick="closeDlg()">취소</button>
+      <button class="pri" onclick="saveMemo()">확인</button>
+    </footer>
   </div>
 </div>
 
@@ -144,7 +198,10 @@ function RT(){
             document.removeEventListener('mouseup', up, true);
             d.classList.remove('n-drag');
             if (moved) window.parent.__nMove(i, Math.round(parseFloat(d.style.left)), Math.round(parseFloat(d.style.top)));
-            else window.parent.__nEdit(i);
+            else {
+              var rc = d.getBoundingClientRect();
+              window.parent.__nEdit(i, rc.left, rc.top);
+            }
           }
           document.addEventListener('mousemove', mv, true);
           document.addEventListener('mouseup', up, true);
@@ -239,20 +296,94 @@ function mount(){
       if (d.querySelector('.n-menu')) return;
       if (e.target.closest && e.target.closest('.n-memo,.n-btn,.n-menu')) return;
       e.preventDefault(); e.stopPropagation();
-      var t = prompt('이 위치에 남길 코멘트를 입력하세요.');
-      if (!t || !t.trim()) return;
-      N.push({ x: Math.round(e.pageX + 14), y: Math.round(e.pageY + 12), t: t.trim(), c: 'y' });
-      push(); toast('코멘트를 추가했습니다');
+      var fb = fr.getBoundingClientRect();
+      openDlg(null, Math.round(e.pageX + 14), Math.round(e.pageY + 12),
+              fb.left + e.clientX, fb.top + e.clientY);
     }, true);
   }, 280);
 }
-window.__nEdit = function(i){
-  var t = prompt('코멘트 수정 · 내용을 비우면 삭제됩니다.', N[i].t);
-  if (t === null) return;
-  if (!t.trim()) { N.splice(i, 1); toast('삭제했습니다'); }
-  else { N[i].t = t.trim(); toast('수정했습니다'); }
-  push();
+window.__nEdit = function(i, cx, cy){
+  var fb = fr.getBoundingClientRect();
+  openDlg(i, null, null,
+          (cx == null ? innerWidth / 2 : fb.left + cx),
+          (cy == null ? innerHeight / 3 : fb.top + cy));
 };
+
+/* ── 코멘트 입력 창 ── */
+var PAL = { b: ['#eaf2fb','#0f5c8c','파랑'], g: ['#ecfbf1','#15803d','초록'],
+            y: ['#fffbe6','#c99b2e','노랑'], o: ['#fff4e6','#e07b1a','주황'],
+            r: ['#fdeceb','#d0342c','빨강'] };
+var dIdx = null, dPos = null, dCol = 'y';
+function drawSw(){
+  $('sw').innerHTML = Object.keys(PAL).map(function(k){
+    return '<button title="' + PAL[k][2] + '" class="' + (dCol === k ? 'on' : '') + '"'
+      + ' style="background:' + PAL[k][0] + ';border-color:' + PAL[k][1]
+      + ';box-shadow:inset 3px 0 0 ' + PAL[k][1] + '" onclick="pickCol(\'' + k + '\')"></button>';
+  }).join('');
+}
+function pickCol(k){ dCol = k; drawSw(); }
+function place(vx, vy){
+  var d = document.querySelector('.dlg');
+  d.classList.remove('flipx', 'flipy', 'moving');
+  d.style.left = '0px'; d.style.top = '0px';
+  var w = d.offsetWidth, h = d.offsetHeight, M = 10;
+  var L = vx + 12, T = vy + 12, fx = false, fy = false;
+  if (L + w > innerWidth - M) { L = vx - w - 12; fx = true; }
+  if (T + h > innerHeight - M) { T = vy - h - 12; fy = true; }
+  if (L < M) { L = M; fx = false; }
+  if (T < M) { T = M; fy = false; }
+  d.classList.toggle('flipx', fx); d.classList.toggle('flipy', fy);
+  d.style.left = Math.round(L) + 'px'; d.style.top = Math.round(T) + 'px';
+}
+function startDrag(e){
+  if (e.button !== 0 || e.target.closest('.swatch')) return;
+  e.preventDefault();
+  var d = document.querySelector('.dlg');
+  var sx = e.clientX, sy = e.clientY;
+  var ox = parseFloat(d.style.left) || 0, oy = parseFloat(d.style.top) || 0;
+  d.classList.add('moving');
+  function mv(ev){
+    var L = ox + ev.clientX - sx, T = oy + ev.clientY - sy;
+    L = Math.min(Math.max(4, L), innerWidth - d.offsetWidth - 4);
+    T = Math.min(Math.max(4, T), innerHeight - d.offsetHeight - 4);
+    d.style.left = Math.round(L) + 'px'; d.style.top = Math.round(T) + 'px';
+  }
+  function up(){
+    document.removeEventListener('mousemove', mv, true);
+    document.removeEventListener('mouseup', up, true);
+    d.classList.remove('moving');
+  }
+  document.addEventListener('mousemove', mv, true);
+  document.addEventListener('mouseup', up, true);
+}
+function openDlg(i, x, y, vx, vy){
+  dIdx = i; dPos = (i === null) ? { x: x, y: y } : null;
+  dCol = (i === null) ? 'y' : (N[i].c || 'y');
+  $('dTitle').textContent = (i === null) ? '코멘트 추가' : '코멘트 수정';
+  $('dTxt').value = (i === null) ? '' : N[i].t;
+  $('dDel').style.display = (i === null) ? 'none' : '';
+  drawSw();
+  $('mask').classList.add('on');
+  place(vx == null ? innerWidth / 2 : vx, vy == null ? innerHeight / 3 : vy);
+  setTimeout(function(){ var t = $('dTxt'); t.focus(); t.setSelectionRange(t.value.length, t.value.length); }, 40);
+}
+function closeDlg(){ $('mask').classList.remove('on'); dIdx = null; dPos = null; }
+function saveMemo(){
+  var t = $('dTxt').value.replace(/\s+$/, '');
+  if (!t.trim()) { if (dIdx !== null) return delMemo(); closeDlg(); return; }
+  if (dIdx === null) { N.push({ x: dPos.x, y: dPos.y, t: t, c: dCol }); toast('코멘트를 추가했습니다'); }
+  else { N[dIdx].t = t; N[dIdx].c = dCol; toast('수정했습니다'); }
+  closeDlg(); push();
+}
+function delMemo(){
+  if (dIdx === null) return;
+  N.splice(dIdx, 1); closeDlg(); push(); toast('삭제했습니다');
+}
+document.addEventListener('keydown', function(e){
+  if (!$('mask').classList.contains('on')) return;
+  if (e.key === 'Escape') { e.preventDefault(); closeDlg(); }
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); saveMemo(); }
+});
 window.__nMove = function(i, x, y){ N[i].x = x; N[i].y = y; setTip(); };
 window.__nColor = function(i, c){ N[i].c = c; push(); };
 window.__nDel = function(i){ N.splice(i, 1); push(); toast('삭제했습니다'); };
