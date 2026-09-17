@@ -19,22 +19,12 @@
     font-family: "Malgun Gothic", "맑은 고딕", Pretendard, sans-serif;
     background: #F7F8F5;
     color: #1E2B23;
-    padding: 16px 16px 10px;
+    padding: 14px 16px 10px; /* 타이틀·시계는 위젯의 네이티브 패널에 있음 */
     overflow-y: auto;
     -webkit-user-select: none; user-select: none;
   }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-thumb { background: #DCE2DB; border-radius: 3px; }
-
-  /* ── 헤더 ── */
-  header {
-    display: flex; align-items: baseline; justify-content: space-between;
-    padding-bottom: 12px; margin-bottom: 14px;
-    border-bottom: 1px solid #DCE2DB;
-  }
-  .title { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; }
-  .title small { font-size: 11px; font-weight: 400; color: #6B7A6F; margin-left: 7px; }
-  #clock { font-size: 11px; color: #6B7A6F; font-variant-numeric: tabular-nums; }
 
   /* ── 섹션 ── */
   section { margin-bottom: 15px; }
@@ -81,11 +71,6 @@
 </head>
 <body>
 
-<header>
-  <div class="title">SJ QuickLink<small>부서 바로가기</small></div>
-  <div id="clock"></div>
-</header>
-
 <section>
   <h2>검색 · 포털</h2>
   <div class="grid">
@@ -130,20 +115,6 @@
   <span>링크 수정: 서버의 index.html 편집</span>
   <span>v1 샘플</span>
 </footer>
-
-<script>
-  // 상단 시계 (오프라인에서도 동작하는 로컬 시계)
-  function tick() {
-    const n = new Date();
-    const day = ["일","월","화","수","목","금","토"][n.getDay()];
-    const hh = String(n.getHours()).padStart(2, "0");
-    const mm = String(n.getMinutes()).padStart(2, "0");
-    document.getElementById("clock").textContent =
-      `${n.getMonth()+1}/${n.getDate()} (${day}) ${hh}:${mm}`;
-  }
-  tick();
-  setInterval(tick, 15_000);
-</script>
 
 </body>
 </html>
