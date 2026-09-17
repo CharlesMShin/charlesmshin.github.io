@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SJ QuickLink</title>
+<style>
+  /* ── 토큰 ─────────────────────────────────────────────
+     paper  #F7F8F5  바탕 (녹색기 도는 종이색)
+     ink    #1E2B23  본문 (짙은 숲색)
+     sub    #6B7A6F  보조 텍스트
+     line   #DCE2DB  구분선
+     moss   #3E7C4F  포인트 (섹션 라벨)
+     ──────────────────────────────────────────────────── */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    font-family: "Malgun Gothic", "맑은 고딕", Pretendard, sans-serif;
+    background: #F7F8F5;
+    color: #1E2B23;
+    padding: 16px 16px 10px;
+    overflow-y: auto;
+    -webkit-user-select: none; user-select: none;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: #DCE2DB; border-radius: 3px; }
+
+  /* ── 헤더 ── */
+  header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding-bottom: 12px; margin-bottom: 14px;
+    border-bottom: 1px solid #DCE2DB;
+  }
+  .title { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; }
+  .title small { font-size: 11px; font-weight: 400; color: #6B7A6F; margin-left: 7px; }
+  #clock { font-size: 11px; color: #6B7A6F; font-variant-numeric: tabular-nums; }
+
+  /* ── 섹션 ── */
+  section { margin-bottom: 15px; }
+  h2 {
+    font-size: 11px; font-weight: 600; color: #3E7C4F;
+    margin-bottom: 8px; letter-spacing: -0.1px;
+  }
+
+  /* ── 링크 타일 그리드 ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  a.tile {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 6px; padding: 10px 4px 8px;
+    text-decoration: none; color: inherit;
+    border-radius: 10px;
+    transition: background .12s ease;
+  }
+  a.tile:hover  { background: #EDF1EC; }
+  a.tile:active { background: #E2E9E1; }
+  a.tile:focus-visible { outline: 2px solid #3E7C4F; outline-offset: 1px; }
+
+  .mono {
+    width: 36px; height: 36px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 15px; font-weight: 700;
+  }
+  .name { font-size: 11.5px; letter-spacing: -0.2px; }
+
+  footer {
+    margin-top: 2px; padding-top: 9px;
+    border-top: 1px solid #DCE2DB;
+    font-size: 10.5px; color: #6B7A6F;
+    display: flex; justify-content: space-between;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a.tile { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title">SJ QuickLink<small>부서 바로가기</small></div>
+  <div id="clock"></div>
+</header>
+
+<section>
+  <h2>검색 · 포털</h2>
+  <div class="grid">
+    <a class="tile" href="https://www.naver.com"><span class="mono" style="background:#03C75A">네</span><span class="name">네이버</span></a>
+    <a class="tile" href="https://www.google.com"><span class="mono" style="background:#4285F4">구</span><span class="name">구글</span></a>
+    <a class="tile" href="https://www.daum.net"><span class="mono" style="background:#326EDC">다</span><span class="name">다음</span></a>
+    <a class="tile" href="https://ko.wikipedia.org"><span class="mono" style="background:#5C6B63">위</span><span class="name">위키백과</span></a>
+  </div>
+</section>
+
+<section>
+  <h2>업무</h2>
+  <div class="grid">
+    <a class="tile" href="https://mail.google.com"><span class="mono" style="background:#EA4335">메</span><span class="name">지메일</span></a>
+    <a class="tile" href="https://drive.google.com"><span class="mono" style="background:#1FA463">드</span><span class="name">드라이브</span></a>
+    <a class="tile" href="https://calendar.google.com"><span class="mono" style="background:#F4B400">캘</span><span class="name">캘린더</span></a>
+    <a class="tile" href="https://github.com"><span class="mono" style="background:#24292F">깃</span><span class="name">깃허브</span></a>
+  </div>
+</section>
+
+<section>
+  <h2>미디어 · 정보</h2>
+  <div class="grid">
+    <a class="tile" href="https://www.youtube.com"><span class="mono" style="background:#FF0000">유</span><span class="name">유튜브</span></a>
+    <a class="tile" href="https://www.yna.co.kr"><span class="mono" style="background:#0B5BAB">뉴</span><span class="name">연합뉴스</span></a>
+    <a class="tile" href="https://www.weather.go.kr"><span class="mono" style="background:#2C90D9">날</span><span class="name">기상청</span></a>
+    <a class="tile" href="https://papago.naver.com"><span class="mono" style="background:#00B8AC">번</span><span class="name">파파고</span></a>
+  </div>
+</section>
+
+<section>
+  <h2>AI</h2>
+  <div class="grid">
+    <a class="tile" href="https://claude.ai"><span class="mono" style="background:#D97757">클</span><span class="name">클로드</span></a>
+    <a class="tile" href="https://chatgpt.com"><span class="mono" style="background:#10A37F">챗</span><span class="name">챗GPT</span></a>
+    <a class="tile" href="https://gemini.google.com"><span class="mono" style="background:#886FE4">제</span><span class="name">제미나이</span></a>
+    <a class="tile" href="https://www.perplexity.ai"><span class="mono" style="background:#20808D">퍼</span><span class="name">퍼플렉시티</span></a>
+  </div>
+</section>
+
+<footer>
+  <span>링크 수정: 서버의 index.html 편집</span>
+  <span>v1 샘플</span>
+</footer>
+
+<script>
+  // 상단 시계 (오프라인에서도 동작하는 로컬 시계)
+  function tick() {
+    const n = new Date();
+    const day = ["일","월","화","수","목","금","토"][n.getDay()];
+    const hh = String(n.getHours()).padStart(2, "0");
+    const mm = String(n.getMinutes()).padStart(2, "0");
+    document.getElementById("clock").textContent =
+      `${n.getMonth()+1}/${n.getDate()} (${day}) ${hh}:${mm}`;
+  }
+  tick();
+  setInterval(tick, 15_000);
+</script>
+
+</body>
+</html>
