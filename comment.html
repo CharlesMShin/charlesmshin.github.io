@@ -1,416 +1,120 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>화면 코멘트</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<title>SJ QuickLink</title>
 <style>
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;background:#eef1f5;color:#14212e;font-size:13px;
- font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;
- display:flex;flex-direction:column;overflow:hidden;letter-spacing:-.01em}
-.top{background:#14212e;color:#fff;padding:9px 14px;display:flex;align-items:center;gap:9px;flex:none}
-.top b{font-size:14.5px;letter-spacing:-.02em}
-.top .fn{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;opacity:.7;
- max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.top .sp{flex:1}
-.top .tip{font-size:11.5px;opacity:.8}
-button{border:1px solid #ccd5e0;background:#fff;color:#14212e;padding:6px 13px;border-radius:3px;
- font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap}
-button:hover:not(:disabled){background:#f2f6fa}
-button:disabled{opacity:.4;cursor:not-allowed}
-.gh{background:transparent;border-color:rgba(255,255,255,.28);color:#fff}
-.gh:hover:not(:disabled){background:rgba(255,255,255,.13)}
-.pri{background:#0f5c8c;border-color:#0f5c8c;color:#fff}
-.pri:hover:not(:disabled){background:#0b476d}
-.gold{background:#fbeec4;border-color:#c99b2e;color:#8a5a08}
-.gold.on{background:#8a5a08;border-color:#8a5a08;color:#fff}
-.frame{flex:1;position:relative;min-height:0}
-iframe{width:100%;height:100%;border:none;background:#fff;display:block}
-.drop{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
- justify-content:center;gap:13px;background:#e6ebf1;text-align:center;padding:30px}
-.drop.hide{display:none}
-.drop .big{font-size:17px;font-weight:800;letter-spacing:-.02em}
-.drop p{margin:0;color:#42536a;max-width:420px;line-height:1.6}
-.drop.over{background:#e7f0f7;outline:3px dashed #0f5c8c;outline-offset:-16px}
-.mask{position:fixed;inset:0;background:rgba(15,25,38,.28);display:none;z-index:120}
-.mask.on{display:block}
-.dlg{position:absolute;background:#fff;border-radius:5px;width:440px;max-width:calc(100vw - 24px);
- box-shadow:0 18px 48px rgba(10,20,35,.4);display:flex;flex-direction:column;
- border:1px solid #b9c5d3}
-.dlg::before{content:"";position:absolute;left:-6px;top:-6px;width:12px;height:12px;
- border-radius:50%;background:#0f5c8c;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
-.dlg.flipx::before{left:auto;right:-6px}
-.dlg.flipy::before{top:auto;bottom:-6px}
-.dlg header{padding:12px 16px 10px;border-bottom:1px solid #e4e9f0;display:flex;
- align-items:center;gap:9px;cursor:grab;user-select:none}
-.dlg header:active{cursor:grabbing}
-.dlg.moving{box-shadow:0 26px 60px rgba(10,20,35,.45)}
-.dlg.moving::before{display:none}
-.grip{color:#b3bfcd;font-size:13px;letter-spacing:-2px;margin-right:1px}
-.dlg header h3{margin:0;font-size:14.5px;font-weight:800;letter-spacing:-.02em}
-.dlg header .sp{flex:1}
-.swatch{display:flex;gap:5px}
-.swatch button{width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.18);padding:0}
-.swatch button:hover{transform:scale(1.14)}
-.swatch button.on{outline:2px solid #14212e;outline-offset:1px}
-.dlg .body{padding:14px 16px}
-.dlg textarea{width:100%;border:1px solid #ccd5e0;border-radius:3px;padding:9px 11px;
- font-family:inherit;font-size:13.5px;line-height:1.65;color:#14212e;resize:vertical;
- min-height:120px;letter-spacing:-.01em}
-.dlg textarea:focus{outline:2px solid #0f5c8c;outline-offset:-1px;border-color:#0f5c8c}
-.dlg .hint{font-size:11.5px;color:#8494a8;margin-top:7px}
-.dlg .hint kbd{font-family:ui-monospace,Consolas,monospace;font-size:10.5px;background:#eef2f6;
- border:1px solid #d8e0e8;border-radius:3px;padding:1px 5px}
-.dlg footer{padding:11px 16px;border-top:1px solid #e4e9f0;display:flex;gap:6px;align-items:center}
-.dlg footer .sp{flex:1}
-.dgr{color:#d0342c;border-color:#e5bcb9}
-.dgr:hover:not(:disabled){background:#fdf2f1}
-#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(12px);
- background:#14212e;color:#fff;padding:9px 17px;border-radius:4px;font-size:12.5px;font-weight:600;
- opacity:0;pointer-events:none;transition:.2s;z-index:99}
-#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* ── 토큰 ─────────────────────────────────────────────
+     paper  #F7F8F5  바탕 (녹색기 도는 종이색)
+     ink    #1E2B23  본문 (짙은 숲색)
+     sub    #6B7A6F  보조 텍스트
+     line   #DCE2DB  구분선
+     moss   #3E7C4F  포인트 (섹션 라벨)
+     ──────────────────────────────────────────────────── */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    font-family: "Malgun Gothic", "맑은 고딕", Pretendard, sans-serif;
+    background: #F7F8F5;
+    color: #1E2B23;
+    padding: 14px 16px 10px; /* 타이틀·시계는 위젯의 네이티브 패널에 있음 */
+    overflow-y: auto;
+    -webkit-user-select: none; user-select: none;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: #DCE2DB; border-radius: 3px; }
+
+  /* ── 섹션 ── */
+  section { margin-bottom: 15px; }
+  h2 {
+    font-size: 11px; font-weight: 600; color: #3E7C4F;
+    margin-bottom: 8px; letter-spacing: -0.1px;
+  }
+
+  /* ── 링크 타일 그리드 ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  a.tile {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 6px; padding: 10px 4px 8px;
+    text-decoration: none; color: inherit;
+    border-radius: 10px;
+    transition: background .12s ease;
+  }
+  a.tile:hover  { background: #EDF1EC; }
+  a.tile:active { background: #E2E9E1; }
+  a.tile:focus-visible { outline: 2px solid #3E7C4F; outline-offset: 1px; }
+
+  .mono {
+    width: 36px; height: 36px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 15px; font-weight: 700;
+  }
+  .name { font-size: 11.5px; letter-spacing: -0.2px; }
+
+  footer {
+    margin-top: 2px; padding-top: 9px;
+    border-top: 1px solid #DCE2DB;
+    font-size: 10.5px; color: #6B7A6F;
+    display: flex; justify-content: space-between;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a.tile { transition: none; }
+  }
 </style>
 </head>
 <body>
 
-<div class="top">
-  <b>화면 코멘트</b>
-  <span class="fn" id="fn">파일 없음</span>
-  <span class="sp"></span>
-  <span class="tip" id="tip"></span>
-  <button class="gh" onclick="fi.click()">파일 열기</button>
-  <button class="gold on" id="bEdit" disabled onclick="tog()">코멘트 달기</button>
-  <button class="pri" id="bExp" disabled onclick="exp()">내보내기</button>
-</div>
-
-<div class="frame">
-  <iframe id="fr"></iframe>
-  <div class="drop" id="drop">
-    <div class="big">HTML 또는 이미지 파일을 여기에 끌어놓으세요</div>
-    <p>HTML은 동작하는 그대로, 이미지는 캡처 화면 그대로 뜹니다. 원하는 곳을 클릭하고 하고 싶은 말을 적으면 그 자리에 메모가 붙습니다. 붙은 메모는 끌어서 옮길 수 있습니다.</p>
-    <button class="pri" onclick="fi.click()">파일 선택</button>
+<section>
+  <h2>검색 · 포털</h2>
+  <div class="grid">
+    <a class="tile" href="https://www.naver.com"><span class="mono" style="background:#03C75A">네</span><span class="name">네이버</span></a>
+    <a class="tile" href="https://www.google.com"><span class="mono" style="background:#4285F4">구</span><span class="name">구글</span></a>
+    <a class="tile" href="https://www.daum.net"><span class="mono" style="background:#326EDC">다</span><span class="name">다음</span></a>
+    <a class="tile" href="https://ko.wikipedia.org"><span class="mono" style="background:#5C6B63">위</span><span class="name">위키백과</span></a>
   </div>
-</div>
+</section>
 
-<div class="mask" id="mask" onclick="if(event.target===this)closeDlg()">
-  <div class="dlg">
-    <header id="dHead" onmousedown="startDrag(event)">
-      <span class="grip">⠿</span>
-      <h3 id="dTitle">코멘트</h3>
-      <span class="sp"></span>
-      <div class="swatch" id="sw"></div>
-    </header>
-    <div class="body">
-      <textarea id="dTxt" placeholder="이 위치에 남길 내용을 입력하세요.&#10;여러 줄로 자유롭게 쓰시면 됩니다."></textarea>
-      <div class="hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> 저장 · <kbd>Esc</kbd> 취소 · 제목줄을 끌면 창이 이동합니다</div>
-    </div>
-    <footer>
-      <button class="dgr" id="dDel" onclick="delMemo()">삭제</button>
-      <span class="sp"></span>
-      <button onclick="closeDlg()">취소</button>
-      <button class="pri" onclick="saveMemo()">확인</button>
-    </footer>
+<section>
+  <h2>업무</h2>
+  <div class="grid">
+    <a class="tile" href="https://mail.google.com"><span class="mono" style="background:#EA4335">메</span><span class="name">지메일</span></a>
+    <a class="tile" href="https://drive.google.com"><span class="mono" style="background:#1FA463">드</span><span class="name">드라이브</span></a>
+    <a class="tile" href="https://calendar.google.com"><span class="mono" style="background:#F4B400">캘</span><span class="name">캘린더</span></a>
+    <a class="tile" href="https://github.com"><span class="mono" style="background:#24292F">깃</span><span class="name">깃허브</span></a>
   </div>
-</div>
+</section>
 
-<input type="file" id="fi" accept=".html,.htm,.png,.jpg,.jpeg,.gif,.webp,.bmp" style="display:none">
-<div id="toast"></div>
+<section>
+  <h2>미디어 · 정보</h2>
+  <div class="grid">
+    <a class="tile" href="https://www.youtube.com"><span class="mono" style="background:#FF0000">유</span><span class="name">유튜브</span></a>
+    <a class="tile" href="https://www.yna.co.kr"><span class="mono" style="background:#0B5BAB">뉴</span><span class="name">연합뉴스</span></a>
+    <a class="tile" href="https://www.weather.go.kr"><span class="mono" style="background:#2C90D9">날</span><span class="name">기상청</span></a>
+    <a class="tile" href="https://papago.naver.com"><span class="mono" style="background:#00B8AC">번</span><span class="name">파파고</span></a>
+  </div>
+</section>
 
-<script>
-/* 내보낸 HTML 안에서도 그대로 도는 코드 */
-function RT(){
-  var N = window.__N || [], EDIT = !!window.__EDITOR;
-  var C = {
-    b: ['#eaf2fb', '#a3c2e0', '#0f5c8c'],
-    g: ['#ecfbf1', '#7cc79a', '#15803d'],
-    y: ['#fffbe6', '#e0c98a', '#c99b2e'],
-    o: ['#fff4e6', '#eabb7a', '#e07b1a'],
-    r: ['#fdeceb', '#e8a9a3', '#d0342c']
-  };
-  var css = ''
-   + '.n-memo{position:absolute;max-width:260px;background:#fffbe6;border:1px solid #e0c98a;'
-   +  'border-left:3px solid #c99b2e;border-radius:3px;padding:7px 10px;'
-   +  'font:400 12.5px/1.55 Pretendard,-apple-system,"Malgun Gothic",sans-serif;color:#14212e;'
-   +  'letter-spacing:-.01em;white-space:pre-wrap;box-shadow:0 3px 12px rgba(20,33,46,.18);'
-   +  'z-index:2147483000;word-break:break-word}'
-   + '.n-memo::before{content:"";position:absolute;left:-7px;top:-7px;width:11px;height:11px;'
-   +  'border-radius:50%;background:var(--dot,#c99b2e);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}'
-   + '.n-menu{position:absolute;z-index:2147483003;background:#fff;border:1px solid #ccd5e0;'
-   +  'border-radius:4px;box-shadow:0 8px 24px rgba(20,33,46,.25);padding:5px;display:flex;gap:4px}'
-   + '.n-menu button{width:26px;height:26px;border-radius:50%;border:1px solid rgba(0,0,0,.18);'
-   +  'cursor:pointer;padding:0}'
-   + '.n-menu button:hover{transform:scale(1.14)}'
-   + '.n-menu .n-del{width:auto;border-radius:3px;padding:0 9px;background:#fff;color:#d0342c;'
-   +  'font:700 11.5px Pretendard,sans-serif;border-color:#e5bcb9}'
-   + '.n-edit .n-memo{cursor:grab}'
-   + '.n-edit .n-memo.n-drag{cursor:grabbing;opacity:.85;box-shadow:0 8px 22px rgba(20,33,46,.3)}'
-   + '.n-edit .n-memo:hover{background:#fff3c9;border-color:#c99b2e}'
-   + '.n-off .n-memo{display:none}'
-   + '.n-btn{position:fixed;right:14px;bottom:14px;z-index:2147483002;background:#fbeec4;'
-   +  'border:1px solid #c99b2e;color:#8a5a08;border-radius:20px;padding:7px 15px;'
-   +  'font:700 12px Pretendard,sans-serif;cursor:pointer;box-shadow:0 3px 12px rgba(20,33,46,.2)}';
-  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+<section>
+  <h2>AI</h2>
+  <div class="grid">
+    <a class="tile" href="https://claude.ai"><span class="mono" style="background:#D97757">클</span><span class="name">클로드</span></a>
+    <a class="tile" href="https://chatgpt.com"><span class="mono" style="background:#10A37F">챗</span><span class="name">챗GPT</span></a>
+    <a class="tile" href="https://gemini.google.com"><span class="mono" style="background:#886FE4">제</span><span class="name">제미나이</span></a>
+    <a class="tile" href="https://www.perplexity.ai"><span class="mono" style="background:#20808D">퍼</span><span class="name">퍼플렉시티</span></a>
+  </div>
+</section>
 
-  if (!EDIT) {
-    var b = document.createElement('button');
-    b.className = 'n-btn'; b.textContent = '코멘트 숨기기';
-    b.onclick = function(){
-      var off = document.body.classList.toggle('n-off');
-      b.textContent = off ? '코멘트 보기' : '코멘트 숨기기';
-    };
-    document.body.appendChild(b);
-  }
+<footer>
+  <span>링크 수정: 서버의 index.html 편집</span>
+  <span>v1 샘플</span>
+</footer>
 
-  function draw(){
-    var old = document.querySelectorAll('.n-memo');
-    for (var i = 0; i < old.length; i++) old[i].remove();
-    N.forEach(function(m, i){
-      var d = document.createElement('div');
-      d.className = 'n-memo';
-      d.textContent = m.t;
-      d.style.left = m.x + 'px';
-      d.style.top = m.y + 'px';
-      var c = C[m.c] || C.y;
-      d.style.background = c[0];
-      d.style.borderColor = c[1];
-      d.style.borderLeftColor = c[2];
-      d.style.setProperty('--dot', c[2]);
-      if (EDIT) {
-        d.title = '끌어서 이동 · 클릭해서 수정 · 우클릭으로 색상 변경';
-        d.onmousedown = function(e){
-          if (e.button !== 0) return;
-          e.preventDefault(); e.stopPropagation();
-          var sx = e.pageX, sy = e.pageY;
-          var ox = parseFloat(d.style.left), oy = parseFloat(d.style.top);
-          var moved = false;
-          function mv(ev){
-            var dx = ev.pageX - sx, dy = ev.pageY - sy;
-            if (!moved && Math.abs(dx) + Math.abs(dy) < 4) return;
-            moved = true; d.classList.add('n-drag');
-            d.style.left = Math.max(0, ox + dx) + 'px';
-            d.style.top  = Math.max(0, oy + dy) + 'px';
-          }
-          function up(){
-            document.removeEventListener('mousemove', mv, true);
-            document.removeEventListener('mouseup', up, true);
-            d.classList.remove('n-drag');
-            if (moved) window.parent.__nMove(i, Math.round(parseFloat(d.style.left)), Math.round(parseFloat(d.style.top)));
-            else {
-              var rc = d.getBoundingClientRect();
-              window.parent.__nEdit(i, rc.left, rc.top);
-            }
-          }
-          document.addEventListener('mousemove', mv, true);
-          document.addEventListener('mouseup', up, true);
-        };
-        d.onclick = function(e){ e.stopPropagation(); e.preventDefault(); };
-        d.oncontextmenu = function(e){ e.preventDefault(); e.stopPropagation(); menu(e, i); };
-      }
-      document.body.appendChild(d);
-    });
-  }
-  function closeMenu(){ var m = document.querySelector('.n-menu'); if (m) m.remove(); }
-  function menu(e, i){
-    closeMenu();
-    var box = document.createElement('div');
-    box.className = 'n-menu';
-    box.style.left = (e.pageX - 4) + 'px';
-    box.style.top = (e.pageY - 4) + 'px';
-    ['b','g','y','o','r'].forEach(function(k){
-      var b = document.createElement('button');
-      b.style.background = C[k][0];
-      b.style.borderColor = C[k][2];
-      b.style.boxShadow = 'inset 3px 0 0 ' + C[k][2];
-      b.title = { b: '파랑', g: '초록', y: '노랑', o: '주황', r: '빨강' }[k];
-      if ((N[i].c || 'y') === k) b.style.outline = '2px solid ' + C[k][2], b.style.outlineOffset = '1px';
-      b.onclick = function(ev){ ev.stopPropagation(); closeMenu(); window.parent.__nColor(i, k); };
-      box.appendChild(b);
-    });
-    var del = document.createElement('button');
-    del.className = 'n-del'; del.textContent = '삭제';
-    del.onclick = function(ev){ ev.stopPropagation(); closeMenu(); window.parent.__nDel(i); };
-    box.appendChild(del);
-    document.body.appendChild(box);
-    setTimeout(function(){
-      document.addEventListener('click', closeMenu, { once: true });
-      document.addEventListener('contextmenu', closeMenu, { once: true });
-    }, 0);
-  }
-  window.__NDRAW = function(n){ if (n) N = n; closeMenu(); draw(); };
-  draw();
-}
-
-/* ── 편집기 ── */
-var SRC = '', NAME = '', N = [], edit = true;
-var fr = document.getElementById('fr'), $ = function(i){ return document.getElementById(i); };
-var tt; function toast(m){ var t = $('toast'); t.textContent = m; t.className = 'on'; clearTimeout(tt); tt = setTimeout(function(){ t.className = ''; }, 2200); }
-
-fi.onchange = function(){ if (this.files[0]) read(this.files[0]); this.value = ''; };
-var drop = $('drop');
-['dragenter','dragover'].forEach(function(e){ document.addEventListener(e, function(v){ v.preventDefault(); drop.classList.add('over'); }); });
-['dragleave','drop'].forEach(function(e){ document.addEventListener(e, function(v){ v.preventDefault(); drop.classList.remove('over'); }); });
-document.addEventListener('drop', function(e){ if (e.dataTransfer.files[0]) read(e.dataTransfer.files[0]); });
-
-function read(f){
-  var isImg = /^image\//.test(f.type) || /\.(png|jpe?g|gif|webp|bmp)$/i.test(f.name);
-  var r = new FileReader();
-  r.onload = function(e){
-    if (isImg) {
-      SRC = '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">'
-          + '<title>' + f.name.replace(/[<>&]/g, '') + '</title>'
-          + '<style>html,body{margin:0;padding:0;background:#fff}'
-          + 'img{display:block;border:0}</style></head><body>'
-          + '<img src="' + e.target.result + '" alt="">'
-          + '</body></html>';
-    } else {
-      SRC = e.target.result;
-    }
-    NAME = f.name; $('fn').textContent = NAME;
-    var m = SRC.match(/<script id="__n_data__" type="application\/json">([\s\S]*?)<\/script>/);
-    N = [];
-    if (m) { try { N = JSON.parse(m[1].replace(/\\u003c/g, '<')); toast('기존 코멘트 ' + N.length + '건을 불러왔습니다'); } catch (x) {} }
-    mount(); $('bEdit').disabled = false; $('bExp').disabled = false; drop.classList.add('hide');
-    setTip();
-  };
-  if (isImg) r.readAsDataURL(f); else r.readAsText(f, 'utf-8');
-}
-function clean(h){
-  return h.replace(/<script id="__n_data__"[\s\S]*?<\/script>/g, '')
-          .replace(/<script id="__n_rt__">[\s\S]*?<\/script>/g, '');
-}
-function mount(){
-  var d = fr.contentDocument;
-  d.open(); d.write(clean(SRC)); d.close();
-  setTimeout(function(){
-    var w = fr.contentWindow;
-    w.__N = N; w.__EDITOR = true;
-    var s = d.createElement('script');
-    s.textContent = '(' + RT.toString() + ')();';
-    d.body.appendChild(s);
-    d.body.classList.add('n-edit');
-    d.addEventListener('click', function(e){
-      if (!edit) return;
-      if (d.querySelector('.n-menu')) return;
-      if (e.target.closest && e.target.closest('.n-memo,.n-btn,.n-menu')) return;
-      e.preventDefault(); e.stopPropagation();
-      var fb = fr.getBoundingClientRect();
-      openDlg(null, Math.round(e.pageX + 14), Math.round(e.pageY + 12),
-              fb.left + e.clientX, fb.top + e.clientY);
-    }, true);
-  }, 280);
-}
-window.__nEdit = function(i, cx, cy){
-  var fb = fr.getBoundingClientRect();
-  openDlg(i, null, null,
-          (cx == null ? innerWidth / 2 : fb.left + cx),
-          (cy == null ? innerHeight / 3 : fb.top + cy));
-};
-
-/* ── 코멘트 입력 창 ── */
-var PAL = { b: ['#eaf2fb','#0f5c8c','파랑'], g: ['#ecfbf1','#15803d','초록'],
-            y: ['#fffbe6','#c99b2e','노랑'], o: ['#fff4e6','#e07b1a','주황'],
-            r: ['#fdeceb','#d0342c','빨강'] };
-var dIdx = null, dPos = null, dCol = 'y';
-function drawSw(){
-  $('sw').innerHTML = Object.keys(PAL).map(function(k){
-    return '<button title="' + PAL[k][2] + '" class="' + (dCol === k ? 'on' : '') + '"'
-      + ' style="background:' + PAL[k][0] + ';border-color:' + PAL[k][1]
-      + ';box-shadow:inset 3px 0 0 ' + PAL[k][1] + '" onclick="pickCol(\'' + k + '\')"></button>';
-  }).join('');
-}
-function pickCol(k){ dCol = k; drawSw(); }
-function place(vx, vy){
-  var d = document.querySelector('.dlg');
-  d.classList.remove('flipx', 'flipy', 'moving');
-  d.style.left = '0px'; d.style.top = '0px';
-  var w = d.offsetWidth, h = d.offsetHeight, M = 10;
-  var L = vx + 12, T = vy + 12, fx = false, fy = false;
-  if (L + w > innerWidth - M) { L = vx - w - 12; fx = true; }
-  if (T + h > innerHeight - M) { T = vy - h - 12; fy = true; }
-  if (L < M) { L = M; fx = false; }
-  if (T < M) { T = M; fy = false; }
-  d.classList.toggle('flipx', fx); d.classList.toggle('flipy', fy);
-  d.style.left = Math.round(L) + 'px'; d.style.top = Math.round(T) + 'px';
-}
-function startDrag(e){
-  if (e.button !== 0 || e.target.closest('.swatch')) return;
-  e.preventDefault();
-  var d = document.querySelector('.dlg');
-  var sx = e.clientX, sy = e.clientY;
-  var ox = parseFloat(d.style.left) || 0, oy = parseFloat(d.style.top) || 0;
-  d.classList.add('moving');
-  function mv(ev){
-    var L = ox + ev.clientX - sx, T = oy + ev.clientY - sy;
-    L = Math.min(Math.max(4, L), innerWidth - d.offsetWidth - 4);
-    T = Math.min(Math.max(4, T), innerHeight - d.offsetHeight - 4);
-    d.style.left = Math.round(L) + 'px'; d.style.top = Math.round(T) + 'px';
-  }
-  function up(){
-    document.removeEventListener('mousemove', mv, true);
-    document.removeEventListener('mouseup', up, true);
-    d.classList.remove('moving');
-  }
-  document.addEventListener('mousemove', mv, true);
-  document.addEventListener('mouseup', up, true);
-}
-function openDlg(i, x, y, vx, vy){
-  dIdx = i; dPos = (i === null) ? { x: x, y: y } : null;
-  dCol = (i === null) ? 'y' : (N[i].c || 'y');
-  $('dTitle').textContent = (i === null) ? '코멘트 추가' : '코멘트 수정';
-  $('dTxt').value = (i === null) ? '' : N[i].t;
-  $('dDel').style.display = (i === null) ? 'none' : '';
-  drawSw();
-  $('mask').classList.add('on');
-  place(vx == null ? innerWidth / 2 : vx, vy == null ? innerHeight / 3 : vy);
-  setTimeout(function(){ var t = $('dTxt'); t.focus(); t.setSelectionRange(t.value.length, t.value.length); }, 40);
-}
-function closeDlg(){ $('mask').classList.remove('on'); dIdx = null; dPos = null; }
-function saveMemo(){
-  var t = $('dTxt').value.replace(/\s+$/, '');
-  if (!t.trim()) { if (dIdx !== null) return delMemo(); closeDlg(); return; }
-  if (dIdx === null) { N.push({ x: dPos.x, y: dPos.y, t: t, c: dCol }); toast('코멘트를 추가했습니다'); }
-  else { N[dIdx].t = t; N[dIdx].c = dCol; toast('수정했습니다'); }
-  closeDlg(); push();
-}
-function delMemo(){
-  if (dIdx === null) return;
-  N.splice(dIdx, 1); closeDlg(); push(); toast('삭제했습니다');
-}
-document.addEventListener('keydown', function(e){
-  if (!$('mask').classList.contains('on')) return;
-  if (e.key === 'Escape') { e.preventDefault(); closeDlg(); }
-  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); saveMemo(); }
-});
-window.__nMove = function(i, x, y){ N[i].x = x; N[i].y = y; setTip(); };
-window.__nColor = function(i, c){ N[i].c = c; push(); };
-window.__nDel = function(i){ N.splice(i, 1); push(); toast('삭제했습니다'); };
-function push(){ try { fr.contentWindow.__NDRAW(N); } catch (e) {} setTip(); }
-function setTip(){
-  $('tip').textContent = (edit ? '클릭 = 추가 · 끌기 = 이동 · 메모 클릭 = 수정 · 우클릭 = 색상/삭제' : '보기 모드')
-    + (N.length ? '  ·  ' + N.length + '건' : '');
-}
-function tog(){
-  edit = !edit;
-  $('bEdit').classList.toggle('on', edit);
-  try { fr.contentDocument.body.classList.toggle('n-edit', edit); } catch (e) {}
-  setTip();
-}
-function exp(){
-  var json = JSON.stringify(N).replace(/</g, '\\u003c');
-  var inj = '\n<script id="__n_data__" type="application/json">' + json + '<\/script>\n'
-          + '<script id="__n_rt__">window.__N=' + json + ';(' + RT.toString() + ')();<\/script>\n';
-  var body = clean(SRC);
-  var out = /<\/body>/i.test(body) ? body.replace(/<\/body>/i, inj + '</body>') : body + inj;
-  var b = new Blob(['\uFEFF' + out], { type: 'text/html;charset=utf-8' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(b);
-  a.download = NAME.replace(/\.(html?|png|jpe?g|gif|webp|bmp)$/i, '') + '_코멘트.html';
-  a.click();
-  toast('코멘트 ' + N.length + '건을 포함해 내보냈습니다');
-}
-</script>
 </body>
 </html>
