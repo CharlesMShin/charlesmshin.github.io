@@ -72,7 +72,7 @@
 <body>
 
 <section>
-  <h2>검색 · 포털 123</h2>
+  <h2>검색 · 포털</h2>
   <div class="grid">
     <a class="tile" href="https://www.naver.com"><span class="mono" style="background:#03C75A">네</span><span class="name">네이버</span></a>
     <a class="tile" href="https://www.google.com"><span class="mono" style="background:#4285F4">구</span><span class="name">구글</span></a>
@@ -111,10 +111,46 @@
   </div>
 </section>
 
+<section>
+  <h2>로컬 프로그램</h2>
+  <div class="grid">
+    <a class="tile" href="#" data-run="comfy"><span class="mono" style="background:#7B5EA7">CF</span><span class="name">ComfyUI</span></a>
+    <a class="tile" href="#" data-run="bandizip"><span class="mono" style="background:#F0932B">BZ</span><span class="name">반디집</span></a>
+    <a class="tile" href="#" data-run="dbbrowser"><span class="mono" style="background:#1565C0">DB</span><span class="name">DB Browser</span></a>
+  </div>
+</section>
+
 <footer>
   <span>링크 수정: 서버의 index.html 편집</span>
   <span>v1 샘플</span>
 </footer>
+
+<script>
+  // 로컬 프로그램 실행: data-run 타일을 누르면 위젯의 로컬 서버(127.0.0.1)를 호출.
+  // 위젯이 떠 있는 PC에서만 동작하고, 그 외엔 조용히 안내만 한다.
+  // 포트는 위젯 config.json의 RunServerPort와 같아야 함 (기본 47317).
+  const RUN_PORT = 47317;
+
+  async function runLocal(id) {
+    try {
+      const r = await fetch(`http://127.0.0.1:${RUN_PORT}/run?id=${encodeURIComponent(id)}`);
+      const j = await r.json();
+      if (r.status === 200) return;                        // 실행됨: 조용히 통과
+      if (r.status === 409) alert("이미 실행 중입니다.");   // 중복
+      else if (r.status === 404) alert("등록되지 않은 프로그램입니다.");
+      else alert("실행 실패: " + (j.message || j.status));
+    } catch (e) {
+      alert("위젯이 실행 중이 아니거나 로컬 실행 기능을 사용할 수 없습니다.");
+    }
+  }
+
+  document.querySelectorAll("a[data-run]").forEach(a => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      runLocal(a.getAttribute("data-run"));
+    });
+  });
+</script>
 
 </body>
 </html>
