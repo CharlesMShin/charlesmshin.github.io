@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IT전략부 업무PC 전용 메뉴</title>
+<!--
+  링크 유지보수: 아래 <a href="..."> 의 주소만 실제 사내 주소로 채우면 됨.
+  프로그램 타일(data-run)의 id 는 위젯 programs.json 의 id 와 일치해야 함.
+  RUN_PORT 는 위젯 config.json 의 RunServerPort 와 같아야 함.
+-->
+<style>
+  /* 토큰: paper #F7F8F5 · ink #1E2B23 · sub #6B7A6F · line #DCE2DB · moss #3E7C4F */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Malgun Gothic", "맑은 고딕", Pretendard, sans-serif;
+    background: #F7F8F5; color: #1E2B23;
+    padding: 14px 16px 10px;
+    overflow-y: auto;
+    -webkit-user-select: none; user-select: none;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: #DCE2DB; border-radius: 3px; }
+
+  .dept {
+    font-size: 11px; color: #6B7A6F; letter-spacing: -0.1px;
+    padding-bottom: 10px; margin-bottom: 12px; border-bottom: 1px solid #DCE2DB;
+  }
+
+  section { margin-bottom: 14px; }
+  h2 { font-size: 11px; font-weight: 600; color: #3E7C4F; margin-bottom: 8px; }
+
+  /* 타일 그리드 */
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  a.tile {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    padding: 9px 4px 7px; border-radius: 10px;
+    text-decoration: none; color: inherit; transition: background .12s ease;
+  }
+  a.tile:hover  { background: #EDF1EC; }
+  a.tile:active { background: #E2E9E1; }
+  a.tile:focus-visible { outline: 2px solid #3E7C4F; outline-offset: 1px; }
+  .mono {
+    width: 36px; height: 36px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 14px; font-weight: 700;
+  }
+  .name { font-size: 11px; letter-spacing: -0.3px; text-align: center; line-height: 1.25; }
+
+  /* 개발/운영 쌍 행 */
+  .pairs { display: flex; flex-direction: column; gap: 4px; }
+  .pair {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 10px 7px 12px; border-radius: 9px; background: #fff;
+    border: 1px solid #E4E9E4;
+  }
+  .pname { font-size: 12px; font-weight: 600; letter-spacing: -0.2px; }
+  .pbtns { display: flex; gap: 6px; }
+  a.pb {
+    font-size: 11px; padding: 4px 12px; border-radius: 999px;
+    text-decoration: none; letter-spacing: -0.2px; transition: all .12s ease;
+  }
+  a.pb.dev { color: #4E5D53; background: #F1F4F1; border: 1px solid #D5DBD6; }
+  a.pb.dev:hover { background: #E4E9E4; }
+  a.pb.ops { color: #fff; background: #3E7C4F; border: 1px solid #3E7C4F; }
+  a.pb.ops:hover { background: #336A42; }
+
+  footer {
+    margin-top: 4px; padding-top: 9px; border-top: 1px solid #DCE2DB;
+    font-size: 10.5px; color: #6B7A6F; display: flex; justify-content: space-between;
+  }
+  @media (prefers-reduced-motion: reduce) { a.tile, a.pb { transition: none; } }
+</style>
+</head>
+<body>
+
+<div class="dept">IT전략부 업무PC 전용 메뉴</div>
+
+<section>
+  <h2>프로그램</h2>
+  <div class="grid">
+    <a class="tile" href="#" data-run="pctransfer"><span class="mono" style="background:#2F6FDE">전</span><span class="name">PC자료전송<br>시스템</span></a>
+    <a class="tile" href="#" data-run="appm"><span class="mono" style="background:#6C4AB6">A</span><span class="name">AppmClient</span></a>
+    <a class="tile" href="#" data-run="remotecall"><span class="mono" style="background:#0E8F85">R</span><span class="name">RemoteCall</span></a>
+  </div>
+</section>
+
+<section>
+  <h2>업무 시스템</h2>
+  <div class="grid">
+    <a class="tile" href="http://your-server/scm"><span class="mono" style="background:#3E7C4F">형</span><span class="name">형상관리<br>시스템</span></a>
+    <a class="tile" href="http://your-server/metastream"><span class="mono" style="background:#C47A1A">M</span><span class="name">데이터표준화<br>MetaStream</span></a>
+    <a class="tile" href="http://your-server/rba"><span class="mono" style="background:#B23B3B">위</span><span class="name">RBA<br>위험평가</span></a>
+    <a class="tile" href="http://your-server/ums"><span class="mono" style="background:#1F6FA8">U</span><span class="name">UMS<br>통합모니터링</span></a>
+    <a class="tile" href="http://your-server/pms"><span class="mono" style="background:#5C6B63">P</span><span class="name">사업관리<br>PMS</span></a>
+  </div>
+</section>
+
+<section>
+  <h2>개발 · 운영</h2>
+  <div class="pairs">
+    <div class="pair">
+      <span class="pname">MCA 모니터링</span>
+      <span class="pbtns">
+        <a class="pb dev" href="http://your-server/mca-dev">개발</a>
+        <a class="pb ops" href="http://your-server/mca">운영</a>
+      </span>
+    </div>
+    <div class="pair">
+      <span class="pname">상관도분석</span>
+      <span class="pbtns">
+        <a class="pb dev" href="http://your-server/impact-core">계정계</a>
+        <a class="pb ops" href="http://your-server/impact-erp">ERP</a>
+      </span>
+    </div>
+    <div class="pair">
+      <span class="pname">이미지시스템</span>
+      <span class="pbtns">
+        <a class="pb dev" href="http://your-server/image-dev">개발</a>
+        <a class="pb ops" href="http://your-server/image">운영</a>
+      </span>
+    </div>
+    <div class="pair">
+      <span class="pname">PPR Rule 관리</span>
+      <span class="pbtns">
+        <a class="pb dev" href="http://your-server/ppr-dev">개발</a>
+        <a class="pb ops" href="http://your-server/ppr">운영</a>
+      </span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>링크 수정: 서버의 index.html 편집</span>
+  <span>IT전략부</span>
+</footer>
+
+<script>
+  // 프로그램 타일: 위젯의 로컬 실행 서버(127.0.0.1) 호출.
+  // 위젯이 떠 있는 PC에서만 동작. 포트는 config.json RunServerPort 와 동일해야 함.
+  const RUN_PORT = 41373;
+
+  async function runLocal(id) {
+    try {
+      const r = await fetch(`http://127.0.0.1:${RUN_PORT}/run?id=${encodeURIComponent(id)}`);
+      const j = await r.json();
+      if (r.status === 200) return;
+      if (r.status === 409) alert("이미 실행 중입니다.");
+      else if (r.status === 404) alert("등록되지 않은 프로그램입니다.");
+      else alert("실행 실패: " + (j.message || j.status));
+    } catch (e) {
+      alert("위젯이 실행 중이 아니거나 로컬 실행 기능을 사용할 수 없습니다.");
+    }
+  }
+  document.querySelectorAll("a[data-run]").forEach(a => {
+    a.addEventListener("click", (e) => { e.preventDefault(); runLocal(a.getAttribute("data-run")); });
+  });
+</script>
+
+</body>
+</html>
