@@ -48,7 +48,7 @@
   }
   .name { font-size: 11px; letter-spacing: -0.3px; text-align: center; line-height: 1.25; }
 
-  /* 개발/운영 쌍 행 */
+  /* 시스템별 구분 행 (개발/운영, 계정계/ERP 등 한 시스템의 두 진입점) */
   .pairs { display: flex; flex-direction: column; gap: 4px; }
   .pair {
     display: flex; align-items: center; justify-content: space-between;
@@ -65,6 +65,30 @@
   a.pb.dev:hover { background: #E4E9E4; }
   a.pb.ops { color: #fff; background: #3E7C4F; border: 1px solid #3E7C4F; }
   a.pb.ops:hover { background: #336A42; }
+  /* 환경(개발/운영)이 아닌 대상 구분 쌍: 회색·그린을 피한 서로 다른 계열 */
+  a.pb.core { color: #fff; background: #1F6FA8; border: 1px solid #1F6FA8; }
+  a.pb.core:hover { background: #195C8C; }
+  a.pb.erp  { color: #fff; background: #6C4AB6; border: 1px solid #6C4AB6; }
+  a.pb.erp:hover  { background: #5A3C9C; }
+
+  /* 메시지 창 (브라우저 alert 대체 — 런타임 버전과 무관하게 폭·위치를 페이지가 제어) */
+  dialog#msg {
+    border: 1px solid #DCE2DB; border-radius: 12px;
+    padding: 18px 18px 14px; max-width: 88%; width: max-content; min-width: 220px;
+    background: #fff; color: #1E2B23;
+    box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  }
+  dialog#msg::backdrop { background: rgba(30,43,35,.35); }
+  .msg-body {
+    font-size: 12.5px; line-height: 1.55; margin-bottom: 14px;
+    white-space: pre-wrap; word-break: break-all;   /* 긴 경로도 폭 안에서 줄바꿈 */
+    -webkit-user-select: text; user-select: text;    /* 오류 내용 복사 가능 */
+  }
+  .msg-ok {
+    float: right; font: inherit; font-size: 12px; padding: 6px 16px;
+    border-radius: 8px; border: 1px solid #3E7C4F; background: #3E7C4F; color: #fff; cursor: pointer;
+  }
+  .msg-ok:hover { background: #336A42; }
 
   footer {
     margin-top: 4px; padding-top: 9px; border-top: 1px solid #DCE2DB;
@@ -98,20 +122,13 @@
 </section>
 
 <section>
-  <h2>개발 · 운영</h2>
+  <h2>시스템별 구분</h2>
   <div class="pairs">
     <div class="pair">
       <span class="pname">MCA 모니터링</span>
       <span class="pbtns">
         <a class="pb dev" href="http://your-server/mca-dev">개발</a>
         <a class="pb ops" href="http://your-server/mca">운영</a>
-      </span>
-    </div>
-    <div class="pair">
-      <span class="pname">상관도분석</span>
-      <span class="pbtns">
-        <a class="pb dev" href="http://your-server/impact-core">계정계</a>
-        <a class="pb ops" href="http://your-server/impact-erp">ERP</a>
       </span>
     </div>
     <div class="pair">
@@ -128,6 +145,13 @@
         <a class="pb ops" href="http://your-server/ppr">운영</a>
       </span>
     </div>
+    <div class="pair">
+      <span class="pname">상관도분석</span>
+      <span class="pbtns">
+        <a class="pb core" href="http://your-server/impact-core">계정계</a>
+        <a class="pb erp" href="http://your-server/impact-erp">ERP</a>
+      </span>
+    </div>
   </div>
 </section>
 
@@ -136,21 +160,32 @@
   <span>IT전략부</span>
 </footer>
 
+<dialog id="msg">
+  <div class="msg-body" id="msgText"></div>
+  <form method="dialog"><button class="msg-ok" autofocus>확인</button></form>
+</dialog>
+
 <script>
   // 프로그램 타일: 위젯의 로컬 실행 서버(127.0.0.1) 호출.
   // 위젯이 떠 있는 PC에서만 동작. 포트는 config.json RunServerPort 와 동일해야 함.
   const RUN_PORT = 41373;
+
+  // 브라우저 alert 대신 페이지 안 <dialog> 로 표시 (Chromium 버전에 따라 alert 폭이 잘리는 문제 회피)
+  function showMsg(text) {
+    document.getElementById("msgText").textContent = text;
+    document.getElementById("msg").showModal();
+  }
 
   async function runLocal(id) {
     try {
       const r = await fetch(`http://127.0.0.1:${RUN_PORT}/run?id=${encodeURIComponent(id)}`);
       const j = await r.json();
       if (r.status === 200) return;
-      if (r.status === 409) alert("이미 실행 중입니다.");
-      else if (r.status === 404) alert("등록되지 않은 프로그램입니다.");
-      else alert("실행 실패: " + (j.message || j.status));
+      if (r.status === 409) showMsg("이미 실행 중입니다.");
+      else if (r.status === 404) showMsg("등록되지 않은 프로그램입니다.");
+      else showMsg("실행 실패: " + (j.message || j.status) + (j.detail ? "\n\n" + j.detail : ""));
     } catch (e) {
-      alert("위젯이 실행 중이 아니거나 로컬 실행 기능을 사용할 수 없습니다.");
+      showMsg("위젯이 실행 중이 아니거나 로컬 실행 기능을 사용할 수 없습니다.");
     }
   }
   document.querySelectorAll("a[data-run]").forEach(a => {
