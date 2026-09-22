@@ -73,6 +73,7 @@
 
   /* 메시지 창 (브라우저 alert 대체 — 런타임 버전과 무관하게 폭·위치를 페이지가 제어) */
   dialog#msg {
+    margin: auto; inset: 0;                          /* 전역 리셋(* {margin:0})이 지운 중앙 정렬 복구 */
     border: 1px solid #DCE2DB; border-radius: 12px;
     padding: 18px 18px 14px; max-width: 88%; width: max-content; min-width: 220px;
     background: #fff; color: #1E2B23;
