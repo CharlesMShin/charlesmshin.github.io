@@ -8,6 +8,10 @@
   링크 유지보수: 아래 <a href="..."> 의 주소만 실제 사내 주소로 채우면 됨.
   프로그램 타일(data-run)의 id 는 위젯 programs.json 의 id 와 일치해야 함.
   RUN_PORT 는 위젯 config.json 의 RunServerPort 와 같아야 함.
+
+  SSO 자동 로그인: 링크 주소에 각 시스템의 토큰 파라미터명으로 __SSOTOKEN__ 을 넣으면
+  위젯이 클릭 시 토큰으로 바꿔 준다. (예: http://mca.nfcf.or.kr/login?ssoKey=__SSOTOKEN__)
+  치환은 위젯 config.json 의 SsoDomains 에 해당하는 호스트에만 적용된다.
 -->
 <style>
   /* 토큰: paper #F7F8F5 · ink #1E2B23 · sub #6B7A6F · line #DCE2DB · moss #3E7C4F */
@@ -129,7 +133,7 @@
       <span class="pname">MCA 모니터링</span>
       <span class="pbtns">
         <a class="pb dev" href="http://your-server/mca-dev">개발</a>
-        <a class="pb ops" href="http://your-server/mca">운영</a>
+        <a class="pb ops" href="http://your-server/mca?ssoKey=__SSOTOKEN__">운영</a>
       </span>
     </div>
     <div class="pair">
